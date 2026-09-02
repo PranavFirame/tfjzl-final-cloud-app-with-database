@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Exam Result{% endblock %}
+{% block content %}
+<div class="text-center mb-4">
+<h1>🎉 Congratulations!</h1>
+<p class="lead">Your exam has been submitted successfully.</p>
+<div class="display-6">Score: <strong>{{ submission.score }}/{{ submission.total_points }}</strong></div>
+</div>
+
+<h2>Exam Results</h2>
+{% for item in results %}
+<div class="card mb-3">
+<div class="card-body">
+<h5>Q{{ forloop.counter }}. {{ item.question.text }}</h5>
+<p><strong>Correct answer:</strong> {{ item.correct.text }}</p>
+</div>
+</div>
+{% endfor %}
+<a class="btn btn-primary" href="{% url 'course_details' submission.course.id %}">Back to Course</a>
+{% endblock %}

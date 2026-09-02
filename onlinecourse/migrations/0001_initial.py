@@ -1,0 +1,37 @@
+from django.db import migrations, models
+import django.db.models.deletion
+import django.contrib.auth.models
+
+class Migration(migrations.Migration):
+    initial = True
+    dependencies = [("auth", "0012_alter_user_first_name_max_length")]
+    operations = [
+        migrations.CreateModel(name="Course", fields=[
+            ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+            ("name", models.CharField(max_length=200)), ("description", models.TextField(blank=True)),
+        ]),
+        migrations.CreateModel(name="Lesson", fields=[
+            ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+            ("title", models.CharField(max_length=200)), ("content", models.TextField(blank=True)),
+            ("order", models.PositiveIntegerField(default=1)),
+            ("course", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name="lessons", to="onlinecourse.course")),
+        ]),
+        migrations.CreateModel(name="Question", fields=[
+            ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+            ("text", models.CharField(max_length=500)), ("points", models.PositiveIntegerField(default=1)),
+            ("order", models.PositiveIntegerField(default=1)),
+            ("course", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name="questions", to="onlinecourse.course")),
+        ]),
+        migrations.CreateModel(name="Choice", fields=[
+            ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+            ("text", models.CharField(max_length=300)), ("is_correct", models.BooleanField(default=False)),
+            ("question", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name="choices", to="onlinecourse.question")),
+        ]),
+        migrations.CreateModel(name="Submission", fields=[
+            ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+            ("score", models.PositiveIntegerField(default=0)), ("total_points", models.PositiveIntegerField(default=0)),
+            ("submitted_at", models.DateTimeField(auto_now_add=True)),
+            ("course", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="onlinecourse.course")),
+            ("user", models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to="auth.user")),
+        ]),
+    ]
